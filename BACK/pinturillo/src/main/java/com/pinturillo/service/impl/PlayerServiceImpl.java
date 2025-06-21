@@ -8,6 +8,7 @@ import com.pinturillo.model.Player;
 import com.pinturillo.model.Room;
 import com.pinturillo.repository.PlayerRepository;
 import com.pinturillo.repository.RoomRepository;
+import com.pinturillo.service.GameService;
 import com.pinturillo.service.PlayerService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -21,136 +22,96 @@ public class PlayerServiceImpl implements PlayerService {
 
     private final PlayerRepository playerRepository;
     private final RoomRepository roomRepository;
+    private final GameService gameService;
 
-    // Obtener Todo
+    // Obtener todos los jugadores
     @Override
-    public List<Player> getAllPlayers(){
+    public List<Player> getAllPlayers() {
         return playerRepository.findAll();
     }
 
-    // Obtener por ID
+    // Obtener jugador por ID
     @Override
-    public PlayerDTO getPlayerById(Integer idPlayer){
-
-        // Consultar en db por su id
+    public PlayerDTO getPlayerById(Integer idPlayer) {
         Player player = playerRepository.findById(idPlayer)
                 .orElseThrow(() -> new RuntimeException("Player not found"));
-
-        // Mapear hacia DTO el resultado que trae el modelo
-        PlayerDTO playerDTO = PlayerMapper.modelToDTO(player);
-
-        // Retornamos objeto mapeado a DTO
-        return playerDTO;
+        return PlayerMapper.modelToDTO(player);
     }
 
-    // Crear en back
+    // Crear jugador + disparar lógica de juego
     @Override
-    public CreatePlayerResponse createPlayerResponse(CreatePlayerRequest createPlayerRequest) throws Exception{
-
-        // Validar que player no sea nulo
-        if(createPlayerRequest == null){
+    public CreatePlayerResponse createPlayerResponse(CreatePlayerRequest req) throws Exception {
+        // Validaciones
+        if (req == null) {
             throw new Exception("Player is null");
         }
-
-        // Validar player name
-        if(createPlayerRequest.getPlayerName() == null){
-            throw new Exception("Player name is null");
+        if (req.getPlayerName() == null || req.getPlayerName().isBlank()) {
+            throw new Exception("Player name is null or empty");
         }
-
-        // Validar score
-        if(createPlayerRequest.getScore() == null){
+        if (req.getScore() == null) {
             throw new Exception("Score is null");
         }
-
-        // Validar owner
-        if(createPlayerRequest.getIsOwner() == null){
+        if (req.getIsOwner() == null) {
             throw new Exception("Is owner is null");
         }
-
-        // Validar Relaciones
-        if(createPlayerRequest.getIdRoom() == null || createPlayerRequest.getIdRoom() <= 0){
+        if (req.getIdRoom() == null || req.getIdRoom() <= 0) {
             throw new Exception("Id room is invalid");
         }
 
-        // Cargar ID
-        Room room = roomRepository.findById(createPlayerRequest.getIdRoom())
-                .orElseThrow(() -> new Exception("Room with id: " + createPlayerRequest.getIdRoom() + " not found"));
+        // Cargar sala
+        Room room = roomRepository.findById(req.getIdRoom())
+                .orElseThrow(() -> new Exception("Room with id: " + req.getIdRoom() + " not found"));
 
-        // Mapear el request a Modelo
-        Player player = PlayerMapper.CreateRequestToModel(createPlayerRequest);
-
-        // Seteo de Creacion, room
+        // Mapear y persistir
+        Player player = PlayerMapper.CreateRequestToModel(req);
         player.setCreatedAt(LocalDateTime.now());
         player.setRoom(room);
-
-        // Persistir el modelo en db
         player = playerRepository.save(player);
 
-        // Convertir a Response para Retornar
-        CreatePlayerResponse playerResponse = PlayerMapper.modelToCreateResponse(player);
+        // Disparar asignación de rol si la sala se llenó
+        gameService.onPlayerJoined(room.getIdRoom());
 
-        // Retornamos el response persistido como solicita el metodo
-        return playerResponse;
+        // Mapear a respuesta
+        return PlayerMapper.modelToCreateResponse(player);
     }
 
-    // Actualizar
+    // Actualizar jugador
     @Override
-    public CreatePlayerResponse updatePlayer(Integer idPlayer, CreatePlayerRequest createPlayerRequest) throws Exception{
-
-        // Verificamos que exista
+    public CreatePlayerResponse updatePlayer(Integer idPlayer, CreatePlayerRequest req) throws Exception {
         Player player = playerRepository.findById(idPlayer)
                 .orElseThrow(() -> new RuntimeException("Player not found"));
 
-        // Validar player name
-        if(createPlayerRequest.getPlayerName() == null){
-            throw new Exception("Player name is null");
+        if (req.getPlayerName() == null || req.getPlayerName().isBlank()) {
+            throw new Exception("Player name is null or empty");
         }
-
-        // Validar score
-        if(createPlayerRequest.getScore() == null){
+        if (req.getScore() == null) {
             throw new Exception("Score is null");
         }
-
-        // Validar owner
-        if(createPlayerRequest.getIsOwner() == null){
+        if (req.getIsOwner() == null) {
             throw new Exception("Is owner is null");
         }
-
-        // Validar IDs de ralacion
-        if(createPlayerRequest.getIdRoom() == null || createPlayerRequest.getIdRoom() <= 0){
+        if (req.getIdRoom() == null || req.getIdRoom() <= 0) {
             throw new Exception("Id room is invalid");
         }
 
-        // Cargamos relacion
-        Room room = roomRepository.findById(createPlayerRequest.getIdRoom())
-                .orElseThrow(() -> new Exception("Room with id: " + createPlayerRequest.getIdRoom() + " not found"));
+        Room room = roomRepository.findById(req.getIdRoom())
+                .orElseThrow(() -> new Exception("Room with id: " + req.getIdRoom() + " not found"));
 
-        // Actualizamos datos
-        player.setPlayerName(createPlayerRequest.getPlayerName());
-        player.setScore(createPlayerRequest.getScore());
-        player.setIsOwner(createPlayerRequest.getIsOwner());
+        player.setPlayerName(req.getPlayerName());
+        player.setScore(req.getScore());
+        player.setIsOwner(req.getIsOwner());
         player.setRoom(room);
 
-        // Guardar Player
         player = playerRepository.save(player);
-
-        // Mapear
-        CreatePlayerResponse playerResponse = PlayerMapper.modelToCreateResponse(player);
-
-        // Retornar
-        return playerResponse;
+        return PlayerMapper.modelToCreateResponse(player);
     }
 
-    // Eliminar
+    // Eliminar jugador
     @Override
-    public void deletePlayer(Integer idPlayer) throws Exception{
-
-        // Verificamos que exista
-        if(!playerRepository.existsById(idPlayer)){
+    public void deletePlayer(Integer idPlayer) throws Exception {
+        if (!playerRepository.existsById(idPlayer)) {
             throw new Exception("Player not found");
         }
-
-        // Eliminamos
         playerRepository.deleteById(idPlayer);
     }
 }

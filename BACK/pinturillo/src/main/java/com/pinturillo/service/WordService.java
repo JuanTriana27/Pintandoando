@@ -19,8 +19,7 @@ public interface WordService {
     CreateWordResponse createWordResponse(CreateWordRequest request) throws Exception;
 
     // Actulizar Word
-    CreateWordResponse updateWord(CreateWordRequest request) throws Exception;
-
+    CreateWordResponse updateWord(Integer idWord, CreateWordRequest request) throws Exception;
     // Eliminar Word
     void deleteWord(Integer idWord) throws Exception;
 }

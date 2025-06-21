@@ -1,6 +1,6 @@
 package com.pinturillo.service;
 
-import com.pinturillo.dto.RoomDTO;
+import com.pinturillo.dto.RoundDTO;
 import com.pinturillo.dto.request.CreateRoundRequest;
 import com.pinturillo.dto.response.CreateRoundResponse;
 import com.pinturillo.model.Round;
@@ -13,7 +13,7 @@ public interface RoundService {
     List<Round>getAllRounds();
 
     // Consular por ID
-    RoomDTO getRoundById(Integer idRound);
+    RoundDTO getRoundById(Integer idRound);
 
     // Crear Round
     CreateRoundResponse createRoundResponse(CreateRoundRequest request) throws Exception;
@@ -23,4 +23,7 @@ public interface RoundService {
 
     // Eliminar Round
     void deleteRound(Integer idRound) throws Exception;
+
+    // Terminar Round (setear endTime)
+    CreateRoundResponse endRound(Integer idRound) throws Exception;
 }

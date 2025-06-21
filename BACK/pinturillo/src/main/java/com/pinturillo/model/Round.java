@@ -24,7 +24,7 @@ public class Round {
     @Column(name = "start_time", nullable = false)
     private LocalDateTime startTime;
 
-    @Column(name = "end_time", nullable = false)
+    @Column(name = "end_time", nullable = true)
     private LocalDateTime endTime;
 
     // Llaves de Relación
