@@ -22,12 +22,10 @@ public class RoomMapper {
     // Metodo Request
     public static Room CreateRequestToModel(CreateRoomRequest request){
         return Room.builder()
-                .idRoom(request.getIdRoom())
                 .code(request.getCode())
                 .roomName(request.getRoomName())
                 .maxPlayers(request.getMaxPlayers())
                 .status(request.getStatus())
-                .createdAt(request.getCreatedAt())
                 .build();
     }
 

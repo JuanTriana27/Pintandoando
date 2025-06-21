@@ -10,9 +10,11 @@ import java.time.LocalDate;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-public class CreateRoomRequest {
-    private String code;
-    private String roomName;
-    private Integer maxPlayers;
-    private String status;
+public class CreateGuessRequest {
+    private String guess;
+    private Boolean isCorrect;
+
+    // IDs Relación
+    private Integer idRound;
+    private Integer idPlayer;
 }

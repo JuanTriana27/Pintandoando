@@ -1,4 +1,4 @@
-package com.pinturillo.dto.response;
+package com.pinturillo.dto;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -10,11 +10,13 @@ import java.time.LocalDateTime;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-public class CreateRoomResponse {
-    private Integer idRoom;
-    private String code;
-    private String roomName;
-    private Integer maxPlayers;
-    private String status;
+public class PlayerDTO {
+    private Integer idPlayer;
+    private String playerName;
+    private Integer score;
+    private Boolean isOwner;
     private LocalDateTime createdAt;
+
+    // IDs Relación
+    private Integer idRoom;
 }

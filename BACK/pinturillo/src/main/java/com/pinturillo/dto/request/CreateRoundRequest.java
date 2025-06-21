@@ -1,4 +1,4 @@
-package com.pinturillo.dto.response;
+package com.pinturillo.dto.request;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -10,11 +10,12 @@ import java.time.LocalDateTime;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-public class CreateRoomResponse {
+public class CreateRoundRequest {
+    private LocalDateTime startTime;
+    private LocalDateTime endTime;
+
+    // IDs Relación
     private Integer idRoom;
-    private String code;
-    private String roomName;
-    private Integer maxPlayers;
-    private String status;
-    private LocalDateTime createdAt;
+    private Integer idWord;
+    private Integer idPlayer;
 }

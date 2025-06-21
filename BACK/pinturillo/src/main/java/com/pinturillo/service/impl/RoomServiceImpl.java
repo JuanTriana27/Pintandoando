@@ -9,6 +9,8 @@ import com.pinturillo.repository.RoomRepository;
 import com.pinturillo.service.RoomService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+
+import java.time.LocalDateTime;
 import java.util.List;
 
 @Service
@@ -70,6 +72,9 @@ public class RoomServiceImpl implements RoomService {
         // Mapear el request a Modelo
         Room room = RoomMapper.CreateRequestToModel(createRoomRequest);
 
+        // Sete de room
+        room.setCreatedAt(LocalDateTime.now());
+
         // Persistir el modelo en db
         room = roomRepository.save(room);
 
@@ -113,7 +118,6 @@ public class RoomServiceImpl implements RoomService {
         room.setRoomName(createRoomRequest.getRoomName());
         room.setMaxPlayers(createRoomRequest.getMaxPlayers());
         room.setStatus(createRoomRequest.getStatus());
-        room.setCreatedAt(createRoomRequest.getCreatedAt());
 
         // Guardar la sala actualizada
         room = roomRepository.save(room);

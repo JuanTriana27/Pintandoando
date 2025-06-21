@@ -10,11 +10,13 @@ import java.time.LocalDateTime;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-public class CreateRoomResponse {
-    private Integer idRoom;
-    private String code;
-    private String roomName;
-    private Integer maxPlayers;
-    private String status;
+public class CreateGuessResponse {
+    private Integer idGuess;
+    private String guess;
+    private Boolean isCorrect;
     private LocalDateTime createdAt;
+
+    // IDs Relación
+    private Integer idRound;
+    private Integer idPlayer;
 }

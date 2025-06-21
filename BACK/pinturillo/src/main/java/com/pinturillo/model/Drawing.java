@@ -12,27 +12,23 @@ import java.time.LocalDateTime;
 @AllArgsConstructor
 @NoArgsConstructor
 @Entity
-@Table(name = "rooms")
-public class Room {
+@Table(name = "drawings")
+public class Drawing {
 
     // Mapear Datos de la db
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "id_room")
-    private Integer idRoom;
+    @Column(name = "id_drawing")
+    private Integer idDrawing;
 
-    @Column(name = "code", nullable = false)
-    private String code;
-
-    @Column(name = "room_name", nullable = false)
-    private String roomName;
-
-    @Column(name = "max_players", nullable = false)
-    private Integer maxPlayers;
-
-    @Column(name = "status", nullable = false)
-    private String status;
+    @Column(name = "data", nullable = false)
+    private String data;
 
     @Column(name = "created_at", nullable = false)
     private LocalDateTime createdAt;
+
+    // Llaves de Relación
+    @ManyToOne
+    @JoinColumn(name = "id_round", referencedColumnName = "id_round", nullable = false)
+    private Round round;
 }
