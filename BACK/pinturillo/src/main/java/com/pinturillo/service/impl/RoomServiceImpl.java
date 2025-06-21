@@ -72,7 +72,7 @@ public class RoomServiceImpl implements RoomService {
         // Mapear el request a Modelo
         Room room = RoomMapper.CreateRequestToModel(createRoomRequest);
 
-        // Sete de room
+        // Seteo de Creación
         room.setCreatedAt(LocalDateTime.now());
 
         // Persistir el modelo en db
