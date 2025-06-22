@@ -1,5 +1,6 @@
 package com.pinturillo.model;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -36,6 +37,7 @@ public class Player {
 
     // Llaves de relación
     @ManyToOne
-    @JoinColumn(name = "id_room", referencedColumnName = "id_room",nullable = false)
+    @JoinColumn(name = "id_room", referencedColumnName = "id_room", nullable = false)
+    @JsonBackReference
     private Room room;
 }

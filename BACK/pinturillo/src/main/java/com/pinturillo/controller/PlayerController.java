@@ -4,6 +4,7 @@ import com.pinturillo.dto.PlayerDTO;
 import com.pinturillo.dto.request.CreatePlayerRequest;
 import com.pinturillo.dto.response.ApiResponse;
 import com.pinturillo.dto.response.CreatePlayerResponse;
+import com.pinturillo.mapper.PlayerMapper;
 import com.pinturillo.model.Player;
 import com.pinturillo.service.impl.PlayerServiceImpl;
 import lombok.RequiredArgsConstructor;
@@ -22,8 +23,11 @@ public class PlayerController {
 
     // Obtener Todo
     @GetMapping("/all")
-    public List<Player> getAllPlayers(){
-        return playerService.getAllPlayers();
+    public List<PlayerDTO> getAllPlayers(){
+        return playerService.getAllPlayers()
+                .stream()
+                .map(PlayerMapper::modelToDTO)
+                .toList();
     }
 
     // Obtener por ID

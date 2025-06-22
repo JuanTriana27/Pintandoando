@@ -4,6 +4,7 @@ import CreateRoom from './components/Create/CreateRoom';
 import RoomList from './components/List/ListRoom';
 import RegisterUser from './components/Register/RegisterUser';
 import DrawingBoard from './components/Draw/DrawingBoard';
+import PlayerScores from './components/Score/PlayerScores';
 
 function App() {
   return (
@@ -14,6 +15,7 @@ function App() {
         <Route path="/rooms" element={<RoomList />} />
         <Route path="/register" element={<RegisterUser />} />
         <Route path="/draw" element={<DrawingBoard />} />
+        <Route path="/scores" element={<PlayerScores />} /> 
       </Routes>
     </BrowserRouter>
   );
